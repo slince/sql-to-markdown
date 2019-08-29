@@ -37,6 +37,9 @@ $ sql2markdown  convert  --source=foo.sql
 | foo  | DECIMAL | 20,2   |         | foo field |
 | bar  | VARCHAR | 20     |         | bar field |
 
+
+支持在一个文件里添加多个 DDL
+
 ## 查看帮助
 
 ```bash
