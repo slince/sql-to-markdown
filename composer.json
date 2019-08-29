@@ -1,6 +1,7 @@
 {
     "name": "slince/sql-to-markdown",
     "description": "Convert mysql table schema to markdown table",
+    "license": "MIT",
     "require": {
         "phpmyadmin/sql-parser": "^5.0",
         "symfony/console": "^4.3",
