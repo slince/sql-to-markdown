@@ -31,6 +31,12 @@ $ sql2markdown  convert  --source=foo.sql
 
 即可在当前文件夹下生成 `foo.sql.md` 文件。
 
+| name | type    | length | default | comment   |
+|------|---------|--------|---------|-----------|
+| id   | INT     |        | 0       | primary   |
+| foo  | DECIMAL | 20,2   |         | foo field |
+| bar  | VARCHAR | 20     |         | bar field |
+
 ## 查看帮助
 
 ```bash
