@@ -4,6 +4,7 @@ namespace Slince\SqlToMarkdown;
 
 use MaddHatter\MarkdownTable\Builder as Table;
 use PhpMyAdmin\SqlParser\Parser;
+use Slince\SqlToMarkdown\Exception\InvalidDDLException;
 
 class SqlToMarkdown
 {
@@ -26,7 +27,26 @@ class SqlToMarkdown
     public function convertSqlToMarkdown($sql)
     {
         $parser = new Parser($sql);
-        return $this->render($this->converter->convert($parser));
+        $schemas = iterator_to_array($this->converter->convert($parser));
+        if (0 === count($schemas)) {
+            throw new InvalidDDLException('The sql is not a valid ddl');
+        }
+        return $this->render($schemas);
+    }
+
+    /**
+     * Render schemas
+     *
+     * @param Schema[] $schemas
+     * @return string
+     */
+    protected function render($schemas)
+    {
+        $markdown = '';
+        foreach ($schemas as $schema) {
+            $markdown .= $this->renderSchema($schema) . PHP_EOL;
+        }
+        return $markdown;
     }
 
     /**
@@ -34,7 +54,7 @@ class SqlToMarkdown
      * @param Schema $schema
      * @return string
      */
-    protected function render(Schema $schema)
+    protected function renderSchema(Schema $schema)
     {
         return <<<EOT
 ## {$schema->getName()} {$schema->getComment() }
@@ -54,7 +74,7 @@ EOT;
             'comment'
         ]);
         foreach ($schema->getColumns() as $column) {
-            $table->row($column->toArray());
+            $table->row(array_values($column->toArray()));
         }
         return $table;
     }

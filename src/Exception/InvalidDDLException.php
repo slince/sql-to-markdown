@@ -1,6 +1,6 @@
 <?php
 
-namespace Slince\SqlToMarkdown;
+namespace Slince\SqlToMarkdown\Exception;
 
 class InvalidDDLException extends \InvalidArgumentException
 {

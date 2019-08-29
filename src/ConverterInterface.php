@@ -3,14 +3,15 @@
 namespace Slince\SqlToMarkdown;
 
 use PhpMyAdmin\SqlParser\Parser;
+use Slince\SqlToMarkdown\Exception\InvalidDDLException;
 
 interface ConverterInterface
 {
     /**
-     * Convert sql parser to schema.
+     * Convert sql parser to schemas.
      *
      * @param Parser $parser
-     * @return Schema
+     * @return Schema[]|\Generator
      * @throws InvalidDDLException
      */
     public function convert(Parser $parser);

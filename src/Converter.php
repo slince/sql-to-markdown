@@ -2,6 +2,7 @@
 
 namespace Slince\SqlToMarkdown;
 
+use PhpMyAdmin\SqlParser\Components\CreateDefinition;
 use PhpMyAdmin\SqlParser\Parser;
 use PhpMyAdmin\SqlParser\Statements\CreateStatement;
 
@@ -12,16 +13,17 @@ class Converter implements ConverterInterface
      */
     public function convert(Parser $parser)
     {
-        $statement = $parser->statements[0];
-        if (!$statement instanceof CreateStatement) {
-            throw new InvalidDDLException();
+        foreach ($parser->statements as $statement) {
+            if (!$statement instanceof CreateStatement) {
+                continue;
+            }
+            $schema = $this->convertStatement($statement);
+            yield $schema;
         }
-        $this->convertStatement($statement);
     }
 
     protected function convertStatement(CreateStatement $statement)
     {
-        $statement->fields = [];
         $table = [
             'name' => $statement->name->table,
             'comment' => $statement->entityOptions->has('comment') ?: null,
@@ -30,15 +32,22 @@ class Converter implements ConverterInterface
         return Schema::fromArray($table);
     }
 
+    /**
+     * @param CreateDefinition[] $fields
+     * @return \Generator
+     */
     protected function convertColumns($fields)
     {
         foreach ($fields as $field) {
+            if (!$field->name) {
+                continue;
+            }
             $default =  $field->options->has('default') ?: null;
             $comment = $field->options->has('comment') ?: null;
             $column = [
                 'name' => $field->name,
                 'type'=> $field->type->name,
-                'length' => $field->type->parameters[0],
+                'length' => implode(',', $field->type->parameters),
                 'default' => $default ? trim($default, "'") : '',
                 'comment' => $comment ? trim($comment, "'") : '',
             ];

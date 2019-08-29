@@ -18,5 +18,7 @@
     },
     "require-dev": {
         "phpunit/phpunit": "^7.5"
-    }
+    },
+    "bin": "./bin/sql2markdown",
+    "minimum-stability": "stable"
 }

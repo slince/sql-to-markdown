@@ -1,6 +1,6 @@
 <?php
 
-namespace Slince\SqlToMarkdown\Console;
+namespace Slince\SqlToMarkdown\Command;
 
 use Slince\SqlToMarkdown\Exception\FileNotFoundException;
 use Slince\SqlToMarkdown\SqlToMarkdown;
